@@ -1,30 +1,10 @@
-#### Common variables
-variable "resource_group_name" {
-  description = "Name of the resource group."
-  type        = string
-}
-
-variable "location" {
-  description = "Azure region to use."
-  type        = string
-}
-
-variable "location_short" {
-  description = "Short string for Azure location."
-  type        = string
-}
-
-variable "client_name" {
-  description = "Client name/account used in naming."
-  type        = string
-}
-
-variable "environment" {
-  description = "Project environment."
-  type        = string
-}
-
-variable "stack" {
-  description = "Project stack name."
-  type        = string
+variable "pim_enabled_groups" {
+  type = map(object({
+    roles                    = list(string)
+    members                  = list(string)
+    create_group             = optional(bool, true)
+    custom_group_description = optional(string, null)
+  }))
+  description = "Managed PIM groups with roles and members."
+  nullable    = false
 }

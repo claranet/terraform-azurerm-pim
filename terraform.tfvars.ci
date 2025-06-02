@@ -1,5 +1,12 @@
-location_short      = "frc"
-client_name         = "test"
-environment         = "test"
-stack               = "ci"
-resource_group_name = "rg-test"
+pim_enabled_groups = {
+  "pim-az-1567" = {
+    roles                    = ["Global Amdinistrator"]
+    members                  = ["jeremy.marmol@claranet.com", "jerome.respaut@claranet.com"]
+    create_group             = true
+    }
+    "pim-pouet" = {
+    roles = ["Global Reader"]
+    members = ["jeremy.marmol@claranet.com", "laurent.piroelle@claranet.com"]
+    create_group = true
+    }
+}
