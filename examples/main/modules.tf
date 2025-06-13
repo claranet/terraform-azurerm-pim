@@ -2,20 +2,21 @@ module "pim" {
   source  = "claranet/pim/azurerm"
   version = "x.x.x"
 
-  location            = module.azure_region.location
-  location_short      = module.azure_region.location_short
-  resource_group_name = module.rg.name
-
-  client_name = var.client_name
-  environment = var.environment
-  stack       = var.stack
-
-  logs_destinations_ids = [
-    module.run.logs_storage_account_id,
-    module.run.log_analytics_workspace_id
-  ]
-
-  extra_tags = {
-    foo = "bar"
+  pim_enabled_groups = {
+    "Tenant Global Administrators Group" = {
+      members = [
+        "user.mail@tenantname.onmicrosoft.com",
+        "guest.user_guest.domaine#EXT#@tenantname.onmicrosoft.com",
+      ]
+      roles = ["Global Administrator"]
+    }
+    "Existing Group" = {
+      members = [
+        "member1@tenantname.onmicrosoft.com",
+        "member2@tenantname.onmicrosoft.com",
+      ]
+      roles        = ["Security Operator", "Cloud App Security Administrator"]
+      create_group = false
+    }
   }
 }

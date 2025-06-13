@@ -3,6 +3,11 @@
 
 Azure module to deploy a [Privileged Identity Management](https://docs.microsoft.com/en-us/azure/xxxxxxx).
 
+## Prerequisites
+This module can only be applied with a Service Principal due to limitations with the Azure CLI and the AzureRM provider:
+* https://github.com/Azure/azure-cli/issues/22775
+* https://github.com/Azure/azure-cli/issues/26471
+
 <!-- BEGIN_TF_DOCS -->
 ## Global versioning rule for Claranet Azure modules
 
@@ -38,21 +43,22 @@ module "pim" {
   source  = "claranet/pim/azurerm"
   version = "x.x.x"
 
-  location            = module.azure_region.location
-  location_short      = module.azure_region.location_short
-  resource_group_name = module.rg.name
-
-  client_name = var.client_name
-  environment = var.environment
-  stack       = var.stack
-
-  logs_destinations_ids = [
-    module.run.logs_storage_account_id,
-    module.run.log_analytics_workspace_id
-  ]
-
-  extra_tags = {
-    foo = "bar"
+  pim_enabled_groups = {
+    "Tenant Global Administrators Group" = {
+      members = [
+        "user.mail@tenantname.onmicrosoft.com",
+        "guest.user_guest.domaine#EXT#@tenantname.onmicrosoft.com",
+      ]
+      roles = ["Global Administrator"]
+    }
+    "Existing Group" = {
+      members = [
+        "member1@tenantname.onmicrosoft.com",
+        "member2@tenantname.onmicrosoft.com",
+      ]
+      roles        = ["Security Operator", "Cloud App Security Administrator"]
+      create_group = false
+    }
   }
 }
 ```
@@ -61,55 +67,33 @@ module "pim" {
 
 | Name | Version |
 |------|---------|
-| azurecaf | ~> 1.2.28 |
-| azurerm | ~> 4.0 |
+| azuread | ~> 3.3 |
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| diagnostics | claranet/diagnostic-settings/azurerm | n/a |
+No modules.
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [azurerm_pim_eligible_role_assignment.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/pim_eligible_role_assignment) | resource |
-| [azurecaf_name.pim](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
+| [azuread_directory_role.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/directory_role) | resource |
+| [azuread_directory_role_eligibility_schedule_request.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/directory_role_eligibility_schedule_request) | resource |
+| [azuread_group_member.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_member) | resource |
+| [azuread_group_without_members.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_without_members) | resource |
+| [azuread_group.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/group) | data source |
+| [azuread_user.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/user) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allowed\_cidrs | List of allowed CIDR ranges to access the Privileged Identity Management resource. | `list(string)` | `[]` | no |
-| allowed\_subnet\_ids | List of allowed subnets IDs to access the Privileged Identity Management resource. | `list(string)` | `[]` | no |
-| client\_name | Client name/account used in naming. | `string` | n/a | yes |
-| custom\_name | Custom Privileged Identity Management, generated if not set. | `string` | `""` | no |
-| default\_tags\_enabled | Option to enable or disable default tags. | `bool` | `true` | no |
-| diagnostic\_settings\_custom\_name | Custom name of the diagnostics settings, name will be `default` if not set. | `string` | `"default"` | no |
-| environment | Project environment. | `string` | n/a | yes |
-| extra\_tags | Additional tags to add on resources. | `map(string)` | `{}` | no |
-| identity | Identity block information. | <pre>object({<br/>    type         = optional(string, "SystemAssigned")<br/>    identity_ids = optional(list(string))<br/>  })</pre> | `{}` | no |
-| location | Azure region to use. | `string` | n/a | yes |
-| location\_short | Short string for Azure location. | `string` | n/a | yes |
-| logs\_categories | Log categories to send to destinations. | `list(string)` | `null` | no |
-| logs\_destinations\_ids | List of destination resources IDs for logs diagnostic destination.<br/>Can be `Storage Account`, `Log Analytics Workspace` and `Event Hub`. No more than one of each can be set.<br/>If you want to use Azure EventHub as a destination, you must provide a formatted string containing both the EventHub Namespace authorization send ID and the EventHub name (name of the queue to use in the Namespace) separated by the <code>&#124;</code> character. | `list(string)` | n/a | yes |
-| logs\_metrics\_categories | Metrics categories to send to destinations. | `list(string)` | `null` | no |
-| name\_prefix | Optional prefix for the generated name. | `string` | `""` | no |
-| name\_suffix | Optional suffix for the generated name. | `string` | `""` | no |
-| network\_bypass | Specify whether traffic is bypassed for 'Logging', 'Metrics', 'AzureServices' or 'None'. | `list(string)` | <pre>[<br/>  "Logging",<br/>  "Metrics",<br/>  "AzureServices"<br/>]</pre> | no |
-| public\_network\_access\_enabled | Whether the Privileged Identity Management is available from public network. | `bool` | `false` | no |
-| resource\_group\_name | Name of the resource group. | `string` | n/a | yes |
-| stack | Project stack name. | `string` | n/a | yes |
+| pim\_enabled\_groups | Managed PIM groups with roles and members. | <pre>map(object({<br/>    roles                    = list(string)<br/>    members                  = list(string)<br/>    create_group             = optional(bool, true)<br/>    custom_group_description = optional(string, null)<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| id | Privileged Identity Management ID. |
-| identity\_principal\_id | Privileged Identity Management system identity principal ID. |
-| module\_diagnostics | Diagnostics settings module outputs. |
-| name | Privileged Identity Management name. |
 | resource | Privileged Identity Management resource object. |
 <!-- END_TF_DOCS -->
 

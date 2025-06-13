@@ -1,5 +1,12 @@
-location_short      = "frc"
-client_name         = "test"
-environment         = "test"
-stack               = "ci"
-resource_group_name = "rg-test"
+pim_enabled_groups = {
+  "pim-admins" = {
+    roles                    = ["Global Administrator"]
+    members                  = ["user1@example.com", "user2@example.com"]
+    create_group             = true
+    }
+    "pim-readers" = {
+    roles = ["Global Reader"]
+    members = ["user3@example.com", "user4@example.com"]
+    create_group = true
+    }
+}
