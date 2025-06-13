@@ -1,7 +1,7 @@
 # Privileged Identity Management
 [![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-blue.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![OpenTofu Registry](https://img.shields.io/badge/opentofu-registry-yellow.svg)](https://search.opentofu.org/module/claranet/pim/azurerm/latest)
 
-Azure module to deploy a [Privileged Identity Management](https://docs.microsoft.com/en-us/azure/xxxxxxx).
+Azure module to deploy a [Privileged Identity Management](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure).
 
 ## Prerequisites
 This module can only be applied with a Service Principal due to limitations with the Azure CLI and the AzureRM provider:
@@ -99,4 +99,4 @@ No modules.
 
 ## Related documentation
 
-Microsoft Azure documentation: xxxx
+Microsoft Azure documentation: [PIM](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure)
