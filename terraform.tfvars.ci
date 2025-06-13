@@ -1,10 +1,10 @@
 pim_enabled_groups = {
-  "pim-az-1567" = {
-    roles                    = ["Global Amdinistrator"]
+  "pim-admins" = {
+    roles                    = ["Global Administrator"]
     members                  = ["jeremy.marmol@claranet.com", "jerome.respaut@claranet.com"]
     create_group             = true
     }
-    "pim-pouet" = {
+    "pim-readers" = {
     roles = ["Global Reader"]
     members = ["jeremy.marmol@claranet.com", "laurent.piroelle@claranet.com"]
     create_group = true
