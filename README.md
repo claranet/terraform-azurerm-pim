@@ -66,7 +66,7 @@ module "pim" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | azuread | ~> 3.3 |
 
 ## Modules
@@ -76,7 +76,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [azuread_directory_role.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/directory_role) | resource |
 | [azuread_directory_role_eligibility_schedule_request.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/directory_role_eligibility_schedule_request) | resource |
 | [azuread_group_member.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_member) | resource |
@@ -87,13 +87,13 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | pim\_enabled\_groups | Managed PIM groups with roles and members. | <pre>map(object({<br/>    roles                    = list(string)<br/>    members                  = list(string)<br/>    create_group             = optional(bool, true)<br/>    custom_group_description = optional(string, null)<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | resource | Privileged Identity Management resource object. |
 <!-- END_TF_DOCS -->
 
